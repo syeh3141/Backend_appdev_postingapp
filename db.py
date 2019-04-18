@@ -11,6 +11,7 @@ class Post(db.Model):
     comments = db.relationship('Comment', cascade='delete')
 
     def __init__(self, **kwargs):
+        """Initialize the instance"""
         self.text = kwargs.get('text', '')
         self.score = 0
         self.username = kwargs.get('username', '')
