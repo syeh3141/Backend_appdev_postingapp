@@ -17,12 +17,14 @@ with app.app_context():
 @app.route('/')
 @app.route('/api/posts/')
 def get_posts():
+  """Json dumps all posts"""
   posts = Post.query.all()
   res = {'success': True, 'data': [post.serialize() for post in posts]}
   return json.dumps(res), 200
 
 @app.route('/api/posts/', methods = ['POST'])
 def create_post():
+  """Create a post from a json body load request"""
   body = json.loads(request.data)
   
   post = Post(
@@ -35,6 +37,7 @@ def create_post():
 
 @app.route('/api/post/<int:post_id>/')
 def get_post(post_id):
+  """Json dump specific post with post_id"""
   post = Post.query.filter_by(id=post_id).first()
   if post is not None:
     return json.dumps({'success': True, 'data': post.serialize()}), 200    
@@ -42,7 +45,7 @@ def get_post(post_id):
 
 @app.route('/api/post/<int:post_id>/', methods = ['POST'])
 def edit_post(post_id):
-  
+  """Edit specific post with post_id"""
   post = Post.query.filter_by(id=post_id).first()
   if post is not None:
     body = json.loads(request.data)
@@ -53,6 +56,7 @@ def edit_post(post_id):
 
 @app.route('/api/post/<int:post_id>/', methods = ['DELETE'])
 def delete_post(post_id):
+  """Delete specific post with post_id"""
   post = Post.query.filter_by(id=post_id).first()
   if post is not None:
     db.session.delete(post)
@@ -62,6 +66,7 @@ def delete_post(post_id):
 
 @app.route('/api/post/<int:post_id>/vote/', methods = ['POST'])
 def vote_post(post_id):
+  """Add vote to a specific post with post_id"""
   post = Post.query.filter_by(id=post_id).first()
   if post is not None:
     body = json.loads(request.data)
@@ -76,6 +81,7 @@ def vote_post(post_id):
 
 @app.route('/api/post/<int:post_id>/comments/')
 def get_comments(post_id):
+  """Json dumps the comments of a post with post_id"""
   post = Post.query.filter_by(id=post_id).first()
   if post is not None:
     comments = [comment.serialize() for comment in post.comments]
@@ -84,6 +90,7 @@ def get_comments(post_id):
 
 @app.route('/api/post/<int:post_id>/comment/', methods = ['POST'])
 def post_comment(post_id):
+  """Post comment on a post with post_id"""
   post = Post.query.filter_by(id=post_id).first()
   if post is not None:
     body = json.loads(request.data)
@@ -100,6 +107,7 @@ def post_comment(post_id):
 
 @app.route('/api/comment/<int:comment_id>/vote/', methods = ['POST'])
 def vote_comment(comment_id):
+  """Add vote to a comment with comment_id"""
   comment = Comment.query.filter_by(id=comment_id).first()
   if comment is not None:
     body = json.loads(request.data)
